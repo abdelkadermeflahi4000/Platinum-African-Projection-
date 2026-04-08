@@ -40,54 +40,66 @@ Thumbs.db
 *.log
 *.tmp
 
-# Warning logs from genetic encryption module
-genetic_encryption/warning_logs/
-
 # Environment files
 .env
 .env.local
 *.env.*
 
-# Dependencies
-venv/
-.venv/
-node_modules/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Build artifacts
-dist/
-build/
-target/
-
-# Editors
-.vscode/
-.idea/
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Coverage reports
-coverage/
-htmlcov/
-*.coverage
-
 # Python specific
-*.pyc
 __pycache__/
+*.pyc
 *.pyo
 *.pyd
 .Python
+env/
+venv/
+.venv/
+.venv*/
+lib/
+lib64/
+pyvenv.cfg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Build and distribution artifacts
+build/
+dist/
+*.egg
+*.egg-info/
 *.so
+*.whl
+
+# Testing and coverage
 .coverage
+coverage/
+htmlcov/
+.noserc
+.pytest_cache/
+.tox/
 .coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-*.tmp
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Dependency management
+Pipfile.lock
+poetry.lock
+*.pot
+*.po
+*~
+rej
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 ```

@@ -1,0 +1,24 @@
+--- AetherOS/requirements.txt (原始)
+
+
++++ AetherOS/requirements.txt (修改后)
+# AetherOS Requirements - نظام تشغيل الواقع
+# Reality OS Dependencies
+
+# Core Scientific Computing
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Data Handling
+dataclasses>=0.6; python_version < "3.7"
+
+# Optional: Testing
+# pytest>=7.3.0
+# pytest-cov>=4.0.0
+
+# Optional: Visualization
+# matplotlib>=3.7.0
+# plotly>=5.14.0
+
+# Optional: Machine Learning (for advanced analysis)
+# scikit-learn>=1.2.0
