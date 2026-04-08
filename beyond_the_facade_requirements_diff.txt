@@ -1,0 +1,5 @@
+--- beyond_the_facade/requirements.txt (原始)
+
+
++++ beyond_the_facade/requirements.txt (修改后)
+# Beyond the Facade - Dependencies\nnumpy>=1.24.0\npytest>=7.4.0\npytest-cov>=4.1.0

@@ -1,7 +1,4 @@
 --- .gitignore (原始)
-
-
-+++ .gitignore (修改后)
 ```gitignore
 # Python
 __pycache__/
@@ -35,4 +32,40 @@ target/
 # OS
 .DS_Store
 Thumbs.db
+```
+
++++ .gitignore (修改后)
+```
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.so
+*.dll
+*.exe
+*.class
+*.out
+
+# Dependencies
+.venv/
+venv/
+.env
+.env.local
+*.env.*
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Editors
+.vscode/
+.idea/
+
+# Build and distribution
+dist/
+build/
+target/
 ```
