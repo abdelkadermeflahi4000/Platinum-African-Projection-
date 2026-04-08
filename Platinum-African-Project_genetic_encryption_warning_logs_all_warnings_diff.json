@@ -1,0 +1,62 @@
+--- Platinum-African-Project/genetic_encryption/warning_logs/all_warnings.json (原始)
+
+
++++ Platinum-African-Project/genetic_encryption/warning_logs/all_warnings.json (修改后)
+{
+  "export_timestamp": 1775639659.3191104,
+  "total_logs": 2,
+  "statistics": {
+    "total_checks": 1,
+    "anomalies_detected": 1,
+    "critical_events": 1,
+    "alert_level": "RED",
+    "monitoring_active": false,
+    "severity_breakdown": {
+      "LOW": 0,
+      "MEDIUM": 0,
+      "HIGH": 1,
+      "CRITICAL": 1
+    },
+    "detection_rate": 1.0
+  },
+  "logs": [
+    {
+      "id": "WARN-1775639659-5753",
+      "timestamp": 1775639659.318032,
+      "anomaly_type": "integrity_loss",
+      "severity": "CRITICAL",
+      "affected_module": "genetic_encoder_v1",
+      "description": "انخفاض سلامة البيانات إلى 0.6094 (العتبة: 0.99)",
+      "recovery_action": "🛑 إيقاف فوري للنظام | عزل القنوات | استعادة آخر نسخة سليمة | إشعار لجنة الأخلاقيات",
+      "human_impact_assessment": "POTENTIAL - خطر متوسط، يتطلب فحصاً إضافياً",
+      "data_snapshot": {
+        "integrity_score": 0.6094254660059159,
+        "threshold": 0.99,
+        "deviation": 0.38057453399408414,
+        "data_shape": [
+          1000
+        ],
+        "data_mean": 10.008019796407611,
+        "data_std": 0.5059456217470625
+      },
+      "resolved": false,
+      "resolution_time": null
+    },
+    {
+      "id": "WARN-1775639659-9135",
+      "timestamp": 1775639659.318836,
+      "anomaly_type": "unauthorized_access",
+      "severity": "HIGH",
+      "affected_module": "access_control",
+      "description": "محاولة وصول غير مصرح به للسجل الوراثي",
+      "recovery_action": "عزل القناة | تغيير المفاتيح | إشعار الأمن",
+      "human_impact_assessment": "POTENTIAL - خطر اختراق بيانات",
+      "data_snapshot": {
+        "attempt_count": 3,
+        "source_ip": "192.168.x.x"
+      },
+      "resolved": false,
+      "resolution_time": null
+    }
+  ]
+}
