@@ -790,8 +790,16 @@ class GeneticResponseModel:
             if state:
                 change = state.current_expression - gene.baseline_expression
                 direction = "↑" if change > 0 else "↓" if change < 0 else "→"
+
+                # التحقق من حالة النفي أو المحو
+                status = ""
+                if state.current_expression < gene.baseline_expression * 0.5:
+                    status = " ⚠️ SUPPRESSED (نفي)"
+                elif state.current_expression < gene.baseline_expression * 0.3:
+                    status = " 🚫 SILENCED (محو)"
+
                 report_lines.append(
-                    f"  {gene.gene_id} ({gene.gene_name}):")
+                    f"  {gene.gene_id} ({gene.gene_name}):{status}")
                 report_lines.append(
                     f"    الوظيفة: {gene.function}")
                 report_lines.append(
@@ -809,8 +817,15 @@ class GeneticResponseModel:
             if state:
                 change = state.current_expression - gene.baseline_expression
                 direction = "↑" if change > 0 else "↓" if change < 0 else "→"
+
+                status = ""
+                if gene.gene_id == "TNF" and state.current_expression > gene.baseline_expression * 1.3:
+                    status = " 🔥 INFLAMMATORY (التهاب مرتفع)"
+                elif gene.gene_id == "IL10" and state.current_expression < gene.baseline_expression * 0.5:
+                    status = " ⚠️ SUPPRESSED (نفي)"
+
                 report_lines.append(
-                    f"  {gene.gene_id} ({gene.gene_name}):")
+                    f"  {gene.gene_id} ({gene.gene_name}):{status}")
                 report_lines.append(
                     f"    الوظيفة: {gene.function}")
                 report_lines.append(
@@ -831,6 +846,103 @@ class GeneticResponseModel:
         report_lines.append("=" * 70)
 
         return "\n".join(report_lines)
+
+    def apply_stress_event(self, intensity: float = 0.8, duration: str = 'short'):
+        """
+        محاكاة حدث مجهد يؤدي إلى 'نفي' أو 'محو' الجينات الإيجابية.
+
+        Args:
+            intensity: شدة التوتر (0-1)
+            duration: 'short' (نفي مؤقت) أو 'chronic' (محو/كتم جيني)
+        """
+        print(f"\n[!] حدث مجهد مكتشف: الشدة {intensity} | المدة {duration}")
+
+        all_genes = self.RELAXATION_GENES + self.IMMUNITY_GENES
+
+        for gene in all_genes:
+            state = self.gene_states.get(gene.gene_id)
+            if not state:
+                continue
+
+            # الجينات الإيجابية تتأثر سلباً بالتوتر
+            if gene.max_expression > gene.baseline_expression:
+                damage = intensity * gene.sensitivity
+
+                if duration == 'chronic' and intensity > 0.7:
+                    # حالة المحو (Silencing/Erasure): هبوط حاد جداً
+                    new_expr = max(0.05, state.current_expression - (damage * 1.5))
+                    print(f"   🚫 جين {gene.gene_id} دخل حالة 'محو' (كتم جيني)! التعبير: {new_expr:.3f}")
+                else:
+                    # حالة النفي (Suppression): انخفاض طبيعي
+                    new_expr = max(0.2, state.current_expression - damage)
+                    if new_expr < gene.baseline_expression * 0.6:
+                        print(f"   ⬇️ جين {gene.gene_id} في حالة 'نفي' (انخفاض تعبير).")
+
+                state.current_expression = new_expr
+                state.target_expression = new_expr
+
+            # الجينات الالتهابية تزداد مع التوتر
+            elif gene.gene_id == "TNF":
+                boost = intensity * gene.sensitivity
+                new_expr = min(0.9, state.current_expression + boost)
+                state.current_expression = new_expr
+                state.target_expression = new_expr
+                if new_expr > gene.baseline_expression * 1.2:
+                    print(f"   🔥 جين {gene.gene_id} ارتفع (استجابة التهابية).")
+
+    def apply_coherence_recovery(self, coherence_score: float, cumulative_sessions: int = 1):
+        """
+        تطبيق إشارة تماسك لإصلاح النفي وإزالة المحو الجيني تدريجياً.
+
+        Args:
+            coherence_score: درجة التماسك الحالية (0-1)
+            cumulative_sessions: عدد جلسات التماسك المتراكمة (لتأثير التراكمي)
+        """
+        repair_log = []
+        all_genes = self.RELAXATION_GENES + self.IMMUNITY_GENES
+
+        for gene in all_genes:
+            state = self.gene_states.get(gene.gene_id)
+            if not state:
+                continue
+
+            # التعامل مع الجينات الإيجابية المثبطة
+            if gene.max_expression > gene.baseline_expression:
+                current_val = state.current_expression
+
+                # حساب معدل التعافي
+                base_recovery = (coherence_score * 0.15) * gene.sensitivity
+
+                # تأثير التراكمي: كلما زادت الجلسات، زاد عمق الإصلاح
+                cumulative_bonus = min(0.5, cumulative_sessions * 0.05)
+                recovery_rate = base_recovery * (1 + cumulative_bonus)
+
+                # إذا كان الجين في حالة محو عميق، يكون التعافي أبطأ
+                if current_val < gene.baseline_expression * 0.3:
+                    recovery_rate *= 0.3  # إبطاء للتعافي من المحو العميق
+                    if coherence_score > 0.85 and cumulative_sessions > 5:
+                        repair_log.append(f"✨ بدء اختراق حاجز المحو لـ {gene.gene_id}...")
+                elif current_val < gene.baseline_expression * 0.6:
+                    recovery_rate *= 0.7  # تعافي متوسط من النفي
+
+                # تطبيق التعافي
+                new_val = current_val + recovery_rate
+                # سقف التعافي لا يتجاوز الحد الأقصى
+                new_val = min(gene.max_expression * 1.05, new_val)
+
+                state.current_expression = new_val
+                state.target_expression = new_val
+
+            # خفض الجينات الالتهابية
+            elif gene.gene_id == "TNF":
+                reduction = (coherence_score * 0.12) * gene.sensitivity
+                new_val = max(gene.max_expression, state.current_expression - reduction)
+                state.current_expression = new_val
+                state.target_expression = new_val
+
+        if repair_log:
+            for msg in repair_log:
+                print(f"   {msg}")
 
 
 class GateState(Enum):
